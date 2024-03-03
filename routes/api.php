@@ -16,3 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::resource('redirects', RedirectController::class);
 
+Route::controller(RedirectController::class)->prefix('/redirects')->group(function() {
+    Route::get('/{redirect}/stats', 'stats');
+    Route::get('/{redirect}/logs', 'logs');
+});

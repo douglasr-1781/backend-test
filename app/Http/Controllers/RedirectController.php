@@ -80,4 +80,45 @@ class RedirectController extends Controller
 
         return response('Redirect excluído com sucesso.', 200);
     }
+
+    /**
+     * Redirects user to specified url.
+     *
+     * @param \Illuminate\Http\Request  $request
+     * @return void
+     */
+    public function redirect(Request $request, RedirectModel $redirect)
+    {
+        $ip = $request->ip();
+        $referer = $request->header('referer');
+        $query = $request->query();
+        $userAgent = $request->header('User-Agent');
+
+        $route = $this->redirectService->redirect($ip, $referer, $query, $userAgent, $redirect);
+
+        return Redirect::to($route);
+    }
+
+    /**
+     * Redirects user to specified url.
+     *
+     * @param \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function stats(RedirectModel $redirect)
+    {
+        $response = $this->redirectService->stats($redirect);
+        return response($response, 200);
+    }
+
+    /**
+     * Redirects user to specified url.
+     *
+     * @param \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function logs(RedirectModel $redirect)
+    {
+        return $this->redirectService->logs($redirect);
+    }
 }
