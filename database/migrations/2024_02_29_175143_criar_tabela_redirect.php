@@ -15,9 +15,7 @@ return new class extends Migration
     {
         Schema::create('redirect', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
-            $table->string('url_from');
-            $table->string('url_to');
+            $table->string('url_to')->unique();
             $table->boolean('active')->default(true);
             $table->timestamps();
             $table->softDeletes();

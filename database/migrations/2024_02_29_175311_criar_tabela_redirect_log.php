@@ -15,12 +15,14 @@ return new class extends Migration
     {
         Schema::create('redirect_log', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('redirect_id');
+            $table->foreignId('redirect_id')->constrained(
+                table: 'redirect'
+            );
             $table->string('ip');
             $table->text('referer')->nullable();
-            $table->text('query_params')->nullable();
+            $table->json('query_params')->nullable();
             $table->text('user_agent')->nullable();
-            $table->timestamp('access')->nullable();
+            $table->timestamps();
         });
     }
 
