@@ -67,10 +67,12 @@ class RedirectService
     {
         $redirectLog = $this->redirectLogModel->where('redirect_id', $redirect->getRawOriginal('id'))->firstOrFail();
 
+        $referer = $redirectLog->select('referer')->whereNotNull('referer')->groupBy('referer')->orderByRaw('COUNT(*) DESC')->first();
+
         return [
             'access_count' => $redirectLog->count(),
             'unique_access' => $redirectLog->distinct()->count('ip'),
-            'top_referrer' => $redirectLog->select('referer')->whereNotNull('referer')->groupBy('referer')->orderByRaw('COUNT(*) DESC')->first()['referer'],
+            'top_referer' => !empty($referer)? $referer['referer'] : null,
             'access_total' => $redirectLog->whereDate('created_at', '>=', now()->subDays(10)->toDateString())
             ->selectRaw('DATE(created_at) as date, COUNT(*) as total, COUNT(DISTINCT ip) as unique_access')
             ->groupBy('date')->orderBy('date')->get(),            
