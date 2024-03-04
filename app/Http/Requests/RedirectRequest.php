@@ -26,7 +26,7 @@ class RedirectRequest extends FormRequest
     public function rules()
     {
         return [
-            'url_to' => ['bail', 'url:https', 'starts_with:https', new ValidUrl, new ExternalUrl, 'unique:App\Models\RedirectModel,url_to'],
+            'url_to' => ['bail', 'url:https', 'starts_with:https', new ExternalUrl, new ValidUrl, 'unique:App\Models\RedirectModel,url_to'],
             'active' => ['boolean']
         ];
     }
