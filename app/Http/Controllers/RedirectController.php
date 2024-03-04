@@ -40,7 +40,7 @@ class RedirectController extends Controller
     {
         $this->redirectService->store($request->validated());
 
-        return response('Redirect criado com sucesso.', 200);
+        return response(['mensagem' => 'Redirect criado com sucesso.'], 200);
     }
 
     /**
@@ -65,7 +65,7 @@ class RedirectController extends Controller
     {
         $this->redirectService->update($request->validated(), $redirect);
 
-        return response('Redirect atualizado com sucesso.', 200);
+        return response(['mensagem' => 'Redirect atualizado com sucesso.'], 200);
     }
 
     /**
@@ -78,7 +78,7 @@ class RedirectController extends Controller
     {
         $this->redirectService->destroy($redirect);
 
-        return response('Redirect excluído com sucesso.', 200);
+        return response(['mensagem' => 'Redirect excluído com sucesso.'], 200);
     }
 
     /**
