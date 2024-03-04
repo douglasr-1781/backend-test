@@ -22,16 +22,16 @@ Esse documento visa coletar feedbacks sobre o teste de desenvolvimento. Desde o 
 ## Após o Teste
 
 1 - O que você achou do teste?
-> Resposta
+> Mais desafiador do que aparentava.
 
 2 - Levou mais ou menos tempo do que você esperava?
-> Resposta
+> Mais tempo.
 
 3 - Teve imprevistos? Quais?
-> Resposta
+> Alguns, tive problemas com as definições do projeto (dúvidas quanto ao desenvolvimento por falta de informções), com o resource (estava tendo problemas com o Hashid ao chamar rotas de resource) e com os testes (não consegui concluir os testes porque tive problemas na criação do mock).
 
 4 - Existem pontos que você gostaria de ter melhorado?
-> Resposta
+> Terminar os testes de feature e fazer alguns testes unitarios
 
 5 - Quais falhas você encontrou na estrutura do projeto?
-> Resposta
+> Na estrutura do projeto em si, nada que eu não pudesse ser consertado, mas as definições do projeto causaram alguns pontos de dúvida que atrasaram o desenvolvimento
