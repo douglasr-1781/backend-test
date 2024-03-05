@@ -95,4 +95,21 @@ class RedirectTest extends TestCase
 
         $response->assertStatus(400);
     }
+    
+    public function test_create_redirect_empty_param_error(): void
+    {
+        $newRedirect = [
+            'url_to' => 'https://google.com?query='
+        ];
+
+        $response = $this->post('/api/redirects', $newRedirect);
+
+        $response
+            ->assertJson(fn (AssertableJson $json) =>
+            $json->where('mensagem', 'A url possui parâmetros vazios.')
+                ->etc()
+            );
+
+        $response->assertStatus(400);
+    }
 }
