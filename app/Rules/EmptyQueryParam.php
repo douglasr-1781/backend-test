@@ -25,13 +25,18 @@ class EmptyQueryParam implements Rule
      */
     public function passes($attribute, $value)
     {
-        $params = explode('&', parse_url($value)['query']);
+        $parsedUrl = parse_url($value);
 
-        foreach($params as $param)
+        if(isset($parsedUrl['query']))
         {
-            if(empty(explode('=', $param)[1]))
+            $params = explode('&', $parsedUrl['query']);
+    
+            foreach($params as $param)
             {
-                return false;
+                if(empty(explode('=', $param)[1]))
+                {
+                    return false;
+                }
             }
         }
 
