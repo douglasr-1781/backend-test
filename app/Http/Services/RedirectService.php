@@ -6,9 +6,6 @@ use App\Models\RedirectLogModel;
 use App\Models\RedirectModel;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
-use Vinkla\Hashids\Facades\Hashids;
 
 class RedirectService
 {
@@ -58,7 +55,7 @@ class RedirectService
 
         $this->redirectLogModel->create($data);
 
-        $route = $redirect->url_to . $this->stringifyParams($query);
+        $route = $this->makeUrl($redirect->url_to, $query);
 
         return $route;
     }
@@ -75,7 +72,7 @@ class RedirectService
             'top_referer' => !empty($referer)? $referer['referer'] : null,
             'access_total' => $redirectLog->whereDate('created_at', '>=', now()->subDays(10)->toDateString())
             ->selectRaw('DATE(created_at) as date, COUNT(*) as total, COUNT(DISTINCT ip) as unique_access')
-            ->groupBy('date')->orderBy('date')->get(),            
+            ->groupBy('date')->orderBy('date')->get(),
         ];
     }
 
@@ -84,9 +81,11 @@ class RedirectService
         return $this->redirectLogModel->where('redirect_id', $redirect->getRawOriginal('id'))->get();
     }
 
-    private function stringifyParams(array $params) : string
+    private function makeUrl(string $originalUrl, array $params) : string
     {
-        $string = '?';
+        $originalUrl = parse_url($originalUrl);
+
+        $string = $originalUrl['scheme'] . '://' . $originalUrl['host'] . '?';
 
         foreach($params as $key=>$param)
         {
@@ -96,7 +95,7 @@ class RedirectService
             }
         }
 
-        $string = rtrim($string, '&');
+        $string = $string .= $originalUrl['query'];
 
         return $string;
     }
