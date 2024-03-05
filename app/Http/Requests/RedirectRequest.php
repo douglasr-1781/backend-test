@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\EmptyQueryParam;
 use App\Rules\ExternalUrl;
 use App\Rules\ValidUrl;
 use Illuminate\Foundation\Http\FormRequest;
@@ -26,7 +27,7 @@ class RedirectRequest extends FormRequest
     public function rules()
     {
         return [
-            'url_to' => ['bail', 'url:https', 'starts_with:https', new ExternalUrl, new ValidUrl, 'unique:App\Models\RedirectModel,url_to'],
+            'url_to' => ['bail', 'url:https', 'starts_with:https', new ExternalUrl, new ValidUrl, new EmptyQueryParam, 'unique:App\Models\RedirectModel,url_to'],
             'active' => ['boolean']
         ];
     }
