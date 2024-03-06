@@ -19,8 +19,8 @@ class RedirectLogModelFactory extends Factory
     {
         return [
             'redirect_id' => 1,
-            'ip' => fake()->randomElement(['a', null]),
-            'referer' => 'referer',
+            'ip' => fake()->ipv4(),
+            'referer' => fake()->randomElement(['a', null]),
             'query_params' => json_encode(['q' => 'teste']),
             'user_agent' => fake()->userAgent(),
             'created_at' => fake()->date(),

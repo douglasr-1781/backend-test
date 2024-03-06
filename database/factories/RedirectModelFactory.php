@@ -18,9 +18,9 @@ class RedirectModelFactory extends Factory
     {
         return [
             'url_to' => fake()->unique()->url(),
-            'active' => fake()->boolean(),
+            'active' => true,
             'created_at' => fake()->date(),
-            'deleted_at' => fake()->date(),
+            'updated_at' => fake()->date(),
         ];
     }
 }
