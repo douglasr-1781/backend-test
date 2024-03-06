@@ -20,31 +20,37 @@ class RedirectService
 
     public function index() : Collection
     {
+        //Retorna todos os registros de redirect
         return RedirectModel::all();
     }
 
     public function store(array $request) : void
     {
+        //Cria o redirect com o request fornecido
         RedirectModel::create($request);
     }
 
     public function update(array $request, RedirectModel $redirect) : void
     {
+        //Atualiza o redirect com o request fornecido
         $redirect->updateOrFail($request);
     }
 
     public function destroy(RedirectModel $redirect) : void
     {
+        //Desativa e executa o soft delete no redirect
         $redirect->update(['active' => 0]);
         $redirect->delete();
     }
 
     public function redirect(string $ip, ?string $referer, array $query, string $userAgent, RedirectModel $redirect)
     {
+        //Verifica se o redirect está desativado, retorna erro se estiver
         if(!$redirect->active){
             throw new Exception('A rota solicitada está desativada.');
         }
 
+        //Monta o retorno com os dados recebidos
         $data = [
             'redirect_id' => $redirect->getRawOriginal('id'),
             'ip' => $ip,
@@ -53,19 +59,25 @@ class RedirectService
             'user_agent' => $userAgent
         ];
 
+        //Salva os logs do redirect
         $this->redirectLogModel->create($data);
 
+        //Utiliza o redirect e o request para montar a url de redirecionamento
         $route = $this->makeUrl($redirect->url_to, $query);
 
+        //Retorna a url de destino
         return $route;
     }
 
     public function stats(RedirectModel $redirect) : array
     {
+        //Instancia logs para o redirect fornecido
         $redirectLog = $this->redirectLogModel->where('redirect_id', $redirect->getRawOriginal('id'))->firstOrFail();
 
+        //Consulta o referer para retornar o mais frequente
         $referer = $redirectLog->select('referer')->whereNotNull('referer')->groupBy('referer')->orderByRaw('COUNT(*) DESC')->first();
 
+        //Retorna os dados de acesso do redirect
         return [
             'access_count' => $redirectLog->count(),
             'unique_access' => $redirectLog->distinct()->count('ip'),
@@ -78,6 +90,7 @@ class RedirectService
 
     public function logs(RedirectModel $redirect) : Collection
     {
+        //Retorna todos os logs do redirect fornecido
         return $this->redirectLogModel->where('redirect_id', $redirect->getRawOriginal('id'))->get();
     }
 

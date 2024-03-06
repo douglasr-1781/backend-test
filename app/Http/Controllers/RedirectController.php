@@ -25,8 +25,10 @@ class RedirectController extends Controller
      */
     public function index()
     {
+        //Chama o Service para listar os redirects
         $response = $this->redirectService->index();
 
+        //Retorna a lista dos redirects
         return response($response, 200);
     }
 
@@ -38,8 +40,10 @@ class RedirectController extends Controller
      */
     public function store(RedirectCreateRequest $request)
     {
+        //Chama o Service para criar o redirect
         $this->redirectService->store($request->validated());
 
+        //Retorna mensagem de sucesso
         return response(['mensagem' => 'Redirect criado com sucesso.'], 200);
     }
 
@@ -51,6 +55,7 @@ class RedirectController extends Controller
      */
     public function show(RedirectModel $redirect)
     {
+        //Retorna os dados do redirect fornecido
         return response($redirect, 200);
     }
 
@@ -63,8 +68,10 @@ class RedirectController extends Controller
      */
     public function update(RedirectUpdateRequest $request, RedirectModel $redirect)
     {
+        //Chama o Service para atualizar o redirect
         $this->redirectService->update($request->validated(), $redirect);
 
+        //Retorna mensagem de sucesso
         return response(['mensagem' => 'Redirect atualizado com sucesso.'], 200);
     }
 
@@ -76,8 +83,10 @@ class RedirectController extends Controller
      */
     public function destroy(RedirectModel $redirect)
     {
+        //Chama o Service para excluir o redirect (com soft delete)
         $this->redirectService->destroy($redirect);
 
+        //Retorna mensagem de sucesso
         return response(['mensagem' => 'Redirect excluído com sucesso.'], 200);
     }
 
@@ -89,13 +98,16 @@ class RedirectController extends Controller
      */
     public function redirect(Request $request, RedirectModel $redirect)
     {
+        //Define os parâmetros de request para criar o log de acesso
         $ip = $request->ip();
         $referer = $request->header('referer');
         $query = $request->query();
         $userAgent = $request->header('User-Agent');
 
+        //Chama o Service para criar a url de redirecionamento (e salvar o log)
         $route = $this->redirectService->redirect($ip, $referer, $query, $userAgent, $redirect);
 
+        //Retorna o redirect para a rota recebida
         return Redirect::to($route);
     }
 
@@ -107,7 +119,10 @@ class RedirectController extends Controller
      */
     public function stats(RedirectModel $redirect)
     {
+        //Chama o Service para retornar status do redirect
         $response = $this->redirectService->stats($redirect);
+        
+        //Retorna os status para o redirect fornecido
         return response($response, 200);
     }
 
@@ -119,6 +134,7 @@ class RedirectController extends Controller
      */
     public function logs(RedirectModel $redirect)
     {
+        //Chama o Service para listar logs do redirect
         return $this->redirectService->logs($redirect);
     }
 }
