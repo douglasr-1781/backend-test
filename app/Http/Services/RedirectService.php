@@ -81,22 +81,52 @@ class RedirectService
         return $this->redirectLogModel->where('redirect_id', $redirect->getRawOriginal('id'))->get();
     }
 
-    private function makeUrl(string $originalUrl, array $params) : string
+    private function makeUrl(string $redirectUrl, array $requestParams) : string
     {
-        $originalUrl = parse_url($originalUrl);
+        //Separa as seções da url vinda do redirect
+        $redirectUrl = parse_url($redirectUrl);
 
-        $string = $originalUrl['scheme'] . '://' . $originalUrl['host'] . '?';
+        //Define o path, se houver
+        $path = isset($redirectUrl['path'])? $redirectUrl['path'] : '';
 
-        foreach($params as $key=>$param)
+        //Monta a url sem queries no modelo https://host.com/path?
+        $url = $redirectUrl['scheme'] . '://' . $redirectUrl['host'] . $path . '?';
+
+        //Monta a string de queries do request
+        foreach($requestParams as $key=>$param)
         {
             if(!empty($param))
             {
-                $string .= $key . '=' . $param . '&';
+                $url .= $key . '=' . $param . '&';
             }
         }
 
-        $string = $string .= $originalUrl['query'];
+        //Verifica se há queries vindas do redirect
+        if(isset($redirectUrl['query']))
+        {
+            //Define as queries do redirect em array
+            $redirectParams = explode('&', $redirectUrl['query']);
+    
+            //Monta a string de queries do redirect
+            foreach($redirectParams as $key=>$param)
+            {
+                //Captura o nome da chave e valor do parâmetro
+                $paramName = explode('=', $param)[0];
+                $paramValue = explode('=', $param)[1];
 
-        return $string;
+                //Verifica se o request enviado contem uma chave válida (não vazia) igual à chave atual
+                if(!array_key_exists($paramName, $requestParams) || empty($requestParams[$paramName]))
+                {
+                    //Se não houver, adiciona o parâmetro à url
+                    $url .= $paramName . '=' . $paramValue . '&';
+                }
+            }
+        }
+        
+        //Remove o caractere final da url
+        $url = rtrim($url, '&');
+
+        //Retorna a url criada
+        return $url;
     }
 }
